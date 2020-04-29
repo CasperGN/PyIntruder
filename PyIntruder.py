@@ -31,10 +31,10 @@ class PyIntruder():
 			result.append(f'{r.status_code}\t{len(r.content)}\t{str(r.elapsed.total_seconds()*1000)[:7]}\t{url}')
 			if self.save_responses and len(r.content) != 0:
 				try:
-					with open('%s/%s' % (output_dir, payload), 'wb') as f:
+					with open('%s/%s' % (self.output_dir, payload), 'wb') as f:
 						f.write(r.content)
 				except:
-					print("Error: could not write file '%s/%s'" % (output_dir, payload))
+					print("Error: could not write file '%s/%s'" % (self.output_dir, payload))
 		return result
 
 if __name__ == '__main__':
