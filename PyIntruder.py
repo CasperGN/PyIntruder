@@ -29,7 +29,7 @@ class PyIntruder():
 			payload = payload.strip('\n')
 			url = self.baseurl.replace('$', payload)
 			r = requests.get(url, allow_redirects=self.redir)
-			print("%s\t%s\t%s\t  %s" % (r.status_code, len(r.content), str(r.elapsed.total_seconds()*1000)[:5], url))
+			print(f'{r.status_code}\t{len(r.content)}\t{str(r.elapsed.total_seconds()*1000)[:5]}\t{url}')
 			if self.save_responses and len(r.content) != 0:
 				try:
 					with open('%s/%s' % (output_dir, payload), 'wb') as f:
