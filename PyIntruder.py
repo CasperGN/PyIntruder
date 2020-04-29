@@ -10,7 +10,8 @@ class PyIntruder():
 	def __init__(self, redir, save, out, url, payload):
 		self.redir = redir
 		self.save_responses = save
-		self.output_dir = out
+		if out:
+			self.output_dir = os.getcwd()
 		self.baseurl = url
 		self.payloaddata = payload
 
@@ -29,9 +30,9 @@ class PyIntruder():
 		for payload in self.payloaddata:
 			payload = payload.strip('\n')
 			url = self.baseurl.replace('$', payload)
-			r = requests.get(url, allow_redirects=redir)
+			r = requests.get(url, allow_redirects=self.redir)
 			print("%s\t%s\t%s\t  %s" % (r.status_code, len(r.content), r.elapsed.total_seconds()*1000, url))
-			if save_responses and len(r.content) != 0:
+			if self.save_responses and len(r.content) != 0:
 				try:
 					with open('%s/%s' % (output_dir, payload), 'wb') as f:
 						f.write(r.content)
