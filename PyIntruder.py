@@ -22,20 +22,20 @@ class PyIntruder():
 	def run(self):
 
 		### Attempt connection to each URL and print stats
-		print("Status\tLength\tTime\t  Host")
-		print("---------------------------------")
+		result = []
 
 		for payload in self.payloaddata:
 			payload = payload.strip('\n')
 			url = self.baseurl.replace('$', payload)
 			r = requests.get(url, allow_redirects=self.redir)
-			print(f'{r.status_code}\t{len(r.content)}\t{str(r.elapsed.total_seconds()*1000)[:5]}\t{url}')
+			result.append(f'{r.status_code}\t{len(r.content)}\t{str(r.elapsed.total_seconds()*1000)[:7]}\t{url}')
 			if self.save_responses and len(r.content) != 0:
 				try:
 					with open('%s/%s' % (output_dir, payload), 'wb') as f:
 						f.write(r.content)
 				except:
 					print("Error: could not write file '%s/%s'" % (output_dir, payload))
+		return result
 
 if __name__ == '__main__':
 	parser = argparse.ArgumentParser(prog='PyIntruder')
@@ -57,4 +57,4 @@ if __name__ == '__main__':
 	output = args.out if args.target else None
 
 	intruder = PyIntruder(redir, save, output)
-
+	print(intruder)
