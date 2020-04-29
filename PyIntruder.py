@@ -48,7 +48,7 @@ class PyIntruder():
 			if self.save_responses and len(r.content) != 0:
 				try:
 					with open(f'{self.output_dir}/{str(datetime.now()).replace(" ", "T").replace(":", "-").split(".")[0]}-{self.payloaddata.index(payload)}', 'w') as f:
-						f.write(f'{url}\n{r.status_code}\n{r.content}')
+						f.write(f'{url}\n\n{r.status_code}\n\n{r.content}')
 				except:
 					print(f'Error: could not write file {self.output_dir}/{str(datetime.now()).replace(" ", "T").replace(":", "-").split(".")[0]}-{self.payloaddata.index(payload)}')
 			sleep(2)
