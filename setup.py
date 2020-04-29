@@ -7,7 +7,10 @@ setup(
         description = 'Revised by @CasperGN - https://github.com/CasperGN/PyIntruder',
         url = 'https://github.com/sirpsycho/PyIntruder',
         include_package_data=True,
-        install_requires=['requests'],        
+        install_requires=[
+            'requests',
+            'pyopenssl'
+            ],        
         classifiers = [
             'Programming Language :: Python :: 3',
         ],

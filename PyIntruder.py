@@ -3,6 +3,7 @@
 import os, sys, requests, argparse, re
 from random import choice
 from time import sleep
+from OpenSSL import SSL
 
 class PyIntruder():
 
@@ -38,7 +39,10 @@ class PyIntruder():
 			headers = {'User-Agent': user_agent}
 			payload = payload.strip('\n')
 			url = self.baseurl.replace('$', payload)
-			r = requests.get(url, headers=headers, allow_redirects=self.redir)
+			try:
+				r = requests.get(url, headers=headers, allow_redirects=self.redir)
+			except (SSL.SysCallError):
+				continue
 			result.append([r.status_code, len(r.content), str(r.elapsed.total_seconds()*1000)[:7], url])
 			if self.save_responses and len(r.content) != 0:
 				try:
