@@ -26,7 +26,7 @@ class PyIntruder():
 			payload = payload.strip('\n')
 			url = self.baseurl.replace('$', payload)
 			r = requests.get(url, allow_redirects=self.redir)
-			result.append(f'{r.status_code}\t{len(r.content)}\t{str(r.elapsed.total_seconds()*1000)[:7]}\t{url}')
+			result.append([r.status_code, len(r.content), str(r.elapsed.total_seconds()*1000)[:7], url])
 			if self.save_responses and len(r.content) != 0:
 				try:
 					with open('%s/%s' % (self.output_dir, payload), 'wb') as f:
@@ -56,4 +56,7 @@ if __name__ == '__main__':
 
 	intruder = PyIntruder(redir, save, output)
 	output = intruder.run()
-	print(output)
+	print("Status\tLength\tTime\t  Host")
+	print("---------------------------------")
+	for result in output:
+		print(f'{result[0]}\t{result[1]}\t{result[2]}\t{result[3]}')
