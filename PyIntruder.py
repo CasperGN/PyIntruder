@@ -11,9 +11,11 @@ class PyIntruder():
 		self.redir = redir
 		self.save_responses = save
 		if out:
+			self.output_dir = out
+		else:
 			self.output_dir = os.getcwd()
-			if self.output_dir.endswith('/'):
-				self.output_dir = output_dir[:-1]
+		if self.output_dir.endswith('/'):
+			self.output_dir = output_dir[:-1]
 		self.baseurl = url
 		self.payloaddata = payload
 		
