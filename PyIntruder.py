@@ -16,8 +16,6 @@ class PyIntruder():
 				self.output_dir = output_dir[:-1]
 		self.baseurl = url
 		self.payloaddata = payload
-
-		self.run()
 		
 	def run(self):
 
@@ -57,4 +55,5 @@ if __name__ == '__main__':
 	output = args.out if args.target else None
 
 	intruder = PyIntruder(redir, save, output)
-	print(intruder)
+	output = intruder.run()
+	print(output)
