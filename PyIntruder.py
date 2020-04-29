@@ -20,8 +20,8 @@ class PyIntruder():
 			self.output_dir = output_dir[:-1]
 		self.baseurl = url
 		self.payloaddata = payload
-		fileName = re.compile(r'://([\w\.-]+)/')
-		self.filename = fileName.findall(self.baseurl)[0]
+		#fileName = re.compile(r'://([\w\.-]+)/')
+		#self.filename = fileName.findall(self.baseurl)[0]
 
 		self.useragents = []
 		with open(f'{pwd}/user-agents.txt', 'r') as agents:
@@ -46,8 +46,8 @@ class PyIntruder():
 			result.append([r.status_code, len(r.content), str(r.elapsed.total_seconds()*1000)[:7], url])
 			if self.save_responses and len(r.content) != 0:
 				try:
-					with open(f'{self.output_dir}/{self.filename}', 'a') as f:
-						f.write(f'{payload}:\n{r.content}\n\n')
+					with open(f'{self.output_dir}/{payload}', 'w') as f:
+						f.write(f'{r.content}')
 				except:
 					print("Error: could not write file '%s/%s'" % (self.output_dir, payload))
 			sleep(2)
