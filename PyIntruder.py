@@ -21,7 +21,7 @@ class PyIntruder():
 		self.filename = fileName.findall(self.baseurl)[0]
 
 		self.useragents = []
-		with open('/user/bin/user-agents.txt', 'r') as agents:
+		with open('user-agents.txt', 'r') as agents:
 			for useragent in agents:
 				self.useragents.append(useragent.rstrip())
 		

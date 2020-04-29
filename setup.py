@@ -6,8 +6,8 @@ setup(
         author = '@sirpsycho',
         description = 'Revised by @CasperGN - https://github.com/CasperGN/PyIntruder',
         url = 'https://github.com/sirpsycho/PyIntruder',
-        install_requires=['requests'],
-        data_files=[('/usr/bin/', ['user-agents.txt'])],
+        include_package_data=True,
+        install_requires=['requests'],        
         classifiers = [
             'Programming Language :: Python :: 3',
         ],
