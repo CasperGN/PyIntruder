@@ -47,7 +47,7 @@ class PyIntruder():
 			if self.save_responses and len(r.content) != 0:
 				try:
 					with open(f'{self.output_dir}/{self.filename}', 'a') as f:
-						f.write(f'{payload}:\n{r.content}')
+						f.write(f'{payload}:\n{r.content}\n\n')
 				except:
 					print("Error: could not write file '%s/%s'" % (self.output_dir, payload))
 			sleep(2)
