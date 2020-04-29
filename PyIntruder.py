@@ -4,6 +4,7 @@ import os
 import sys
 import requests
 import argparse
+import re
 
 class PyIntruder():
 
@@ -18,6 +19,8 @@ class PyIntruder():
 			self.output_dir = output_dir[:-1]
 		self.baseurl = url
 		self.payloaddata = payload
+		fileName = re.compile(r'://([\w\.-]+)/')
+		self.filename = fileName.findall(self.baseurl)
 		
 	def run(self):
 
@@ -31,8 +34,8 @@ class PyIntruder():
 			result.append([r.status_code, len(r.content), str(r.elapsed.total_seconds()*1000)[:7], url])
 			if self.save_responses and len(r.content) != 0:
 				try:
-					with open('%s/%s' % (self.output_dir, payload), 'wb') as f:
-						f.write(r.content)
+					with open(f'{self.output_dir}/{self.filename}', 'wb') as f:
+						f.write(f'{payload}:\n{r.content}')
 				except:
 					print("Error: could not write file '%s/%s'" % (self.output_dir, payload))
 		return result
@@ -57,8 +60,8 @@ if __name__ == '__main__':
 	output = args.out if args.target else None
 
 	intruder = PyIntruder(redir, save, output)
-	output = intruder.run()
-	print("Status\tLength\tTime\t  Host")
-	print("---------------------------------")
-	for result in output:
-		print(f'{result[0]}\t{result[1]}\t{result[2]}\t{result[3]}')
+	#output = intruder.run()
+	#print("Status\tLength\tTime\t  Host")
+	#print("---------------------------------")
+	#for result in output:
+	#	print(f'{result[0]}\t{result[1]}\t{result[2]}\t{result[3]}')
