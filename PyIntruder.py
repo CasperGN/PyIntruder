@@ -7,6 +7,8 @@ from time import sleep
 class PyIntruder():
 
 	def __init__(self, redir, save, out, url, payload):
+		pwd = os.path.dirname(os.path.realpath(__file__))
+
 		self.redir = redir
 		self.save_responses = save
 		if out:
@@ -21,7 +23,7 @@ class PyIntruder():
 		self.filename = fileName.findall(self.baseurl)[0]
 
 		self.useragents = []
-		with open('user-agents.txt', 'r') as agents:
+		with open(f'{pwd}/user-agents.txt', 'r') as agents:
 			for useragent in agents:
 				self.useragents.append(useragent.rstrip())
 		
