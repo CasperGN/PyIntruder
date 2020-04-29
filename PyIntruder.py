@@ -12,16 +12,14 @@ class PyIntruder():
 		self.save_responses = save
 		if out:
 			self.output_dir = os.getcwd()
+			if self.output_dir.endswith('/'):
+				self.output_dir = output_dir[:-1]
 		self.baseurl = url
 		self.payloaddata = payload
 
 		self.run()
-
+		
 	def run(self):
-
-		if self.output_dir.endswith('/'):
-			output_dir = output_dir[:-1]
-
 
 		### Attempt connection to each URL and print stats
 		print("Status\tLength\tTime\t  Host")
