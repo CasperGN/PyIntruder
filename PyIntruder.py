@@ -1,10 +1,8 @@
 #!/usr/bin/python3
 
-import os
-import sys
-import requests
-import argparse
-import re
+import os, sys, requests, argparse, re
+from random import choice
+from time import sleep
 
 class PyIntruder():
 
@@ -21,6 +19,12 @@ class PyIntruder():
 		self.payloaddata = payload
 		fileName = re.compile(r'://([\w\.-]+)/')
 		self.filename = fileName.findall(self.baseurl)[0]
+
+		self.useragents = []
+		with open('user-agents.txt', 'r') as agents:
+			for useragent in agents:
+				self.useragents.append(useragent.rstrip())
+		
 		
 	def run(self):
 
@@ -28,9 +32,11 @@ class PyIntruder():
 		result = []
 
 		for payload in self.payloaddata:
+			user_agent = choice(self.useragents)
+			headers = {'User-Agent': user_agent}
 			payload = payload.strip('\n')
 			url = self.baseurl.replace('$', payload)
-			r = requests.get(url, allow_redirects=self.redir)
+			r = requests.get(url, headers=headers, allow_redirects=self.redir)
 			result.append([r.status_code, len(r.content), str(r.elapsed.total_seconds()*1000)[:7], url])
 			if self.save_responses and len(r.content) != 0:
 				try:
@@ -38,6 +44,7 @@ class PyIntruder():
 						f.write(f'{payload}:\n{r.content}')
 				except:
 					print("Error: could not write file '%s/%s'" % (self.output_dir, payload))
+			sleep(2)
 		return result
 
 if __name__ == '__main__':
