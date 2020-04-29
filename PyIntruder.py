@@ -20,7 +20,7 @@ class PyIntruder():
 		self.baseurl = url
 		self.payloaddata = payload
 		fileName = re.compile(r'://([\w\.-]+)/')
-		self.filename = fileName.findall(self.baseurl)
+		self.filename = fileName.findall(self.baseurl)[0]
 		
 	def run(self):
 
