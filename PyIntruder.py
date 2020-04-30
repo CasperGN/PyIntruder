@@ -5,6 +5,7 @@ from random import choice
 from time import sleep
 from OpenSSL import SSL
 from datetime import datetime
+from socket import gaierror
 
 class PyIntruder():
 
@@ -42,7 +43,17 @@ class PyIntruder():
 			url = self.baseurl.replace('$', payload)
 			try:
 				r = requests.get(url, headers=headers, allow_redirects=self.redir)
-			except (SSL.SysCallError):
+				# Here we attempt to circumvent rate limit and/or temporary blocks on our IP
+				# Often when 403 og 429 is returned because of a block a small html document
+				# is returned with that is len =~ 200
+				if r.status_code == 403 and len(r.content) > 100 or r.status_code == 429 and len(r.content) > 100:
+					# Testing has shown that at least blocks from Akamai last around 2 minutes
+					sleep(140)
+					r = requests.get(url, headers=headers, allow_redirects=self.redir)
+					if r.status_code == 403 and len(r.content) > 100 or r.status_code == 429 and len(r.content) > 100:
+						# At this point we just continue
+						continue
+			except (SSL.SysCallError, gaierror):
 				continue
 			result.append([r.status_code, len(r.content), str(r.elapsed.total_seconds()*1000)[:7], url])
 			if self.save_responses and len(r.content) != 0:
@@ -51,7 +62,7 @@ class PyIntruder():
 						f.write(f'{url}\n\n{r.status_code}\n\n{r.content}')
 				except:
 					print(f'Error: could not write file {self.output_dir}/{str(datetime.now()).replace(" ", "T").replace(":", "-").split(".")[0]}-{self.payloaddata.index(payload)}')
-			sleep(2)
+			sleep(0.5)
 		return result
 
 if __name__ == '__main__':
