@@ -46,12 +46,12 @@ class PyIntruder():
 				# Here we attempt to circumvent rate limit and/or temporary blocks on our IP
 				# Often when 403 og 429 is returned because of a block a small html document
 				# is returned with that is len =~ 200
-				if r.status_code == 403 and len(r.content) > 100 or r.status_code == 429 and len(r.content) > 100:
+				if r.status_code == 403 and len(r.content) < 200 or r.status_code == 429 and len(r.content) < 200:
 					# Testing has shown that at least blocks from Akamai last around 2 minutes
 					print(f"{str(datetime.now())} - Request was possibly blocked by WAF: Sleeping thread for 140 seconds for {self.target}")
 					sleep(140)
 					r = requests.get(url, headers=headers, allow_redirects=self.redir)
-					if r.status_code == 403 and len(r.content) > 100 or r.status_code == 429 and len(r.content) > 100:
+					if r.status_code == 403 and len(r.content) < 200 or r.status_code == 429 and len(r.content) < 200:
 						# At this point we just continue
 						continue
 			except (SSL.SysCallError, gaierror):
