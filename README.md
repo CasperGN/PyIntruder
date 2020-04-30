@@ -3,17 +3,18 @@ Simple Command Line URL Fuzzer
 
 
 ```
-pyintruder -h
-Usage: pyintruder [options] <base url> <payload list>
-(Use '$' as variable in url that will be swapped out with each payload)
+python3 PyIntruder.py 
+usage: PyIntruder [-h] [-r] [-s] [-o OUT] url payload
 
-Example:  pyintruder http://www.example.com/file/$.pdf payloads.txt
+positional arguments:
+  url                Url with $ to replace
+  payload            payload to replace $ with
 
-Options:
+optional arguments:
   -h, --help         show this help message and exit
   -r, --redir        Allow HTTP redirects
   -s, --save         Save HTTP response content to files
-  -o OUT, --out=OUT  Directory to save HTTP responses
+  -o OUT, --out OUT  Directory to save HTTP responses
  ```
  
  
