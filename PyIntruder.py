@@ -22,8 +22,8 @@ class PyIntruder():
 			self.output_dir = output_dir[:-1]
 		self.baseurl = url
 		self.payloaddata = payload
-		#fileName = re.compile(r'://([\w\.-]+)/')
-		#self.filename = fileName.findall(self.baseurl)[0]
+		targetUrl = re.compile(r'://([\w\.-]+)/')
+		self.target = targetUrl.findall(self.baseurl)[0]
 
 		self.useragents = []
 		with open(f'{pwd}/user-agents.txt', 'r') as agents:
@@ -48,6 +48,7 @@ class PyIntruder():
 				# is returned with that is len =~ 200
 				if r.status_code == 403 and len(r.content) > 100 or r.status_code == 429 and len(r.content) > 100:
 					# Testing has shown that at least blocks from Akamai last around 2 minutes
+					print(f"{str(datetime.now())} - Request was possibly blocked by WAF: Sleeping thread for 140 seconds for {self.target}")
 					sleep(140)
 					r = requests.get(url, headers=headers, allow_redirects=self.redir)
 					if r.status_code == 403 and len(r.content) > 100 or r.status_code == 429 and len(r.content) > 100:
