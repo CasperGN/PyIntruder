@@ -57,6 +57,9 @@ class PyIntruder():
 			except (SSL.SysCallError, gaierror):
 				continue
 			result.append([r.status_code, len(r.content), str(r.elapsed.total_seconds()*1000)[:7], url])
+			if r.status_code == 404:
+				# The url/endpoint is not working, lets just break out
+				return result
 			if self.save_responses and len(r.content) != 0:
 				try:
 					with open(f'{self.output_dir}/{str(datetime.now()).replace(" ", "T").replace(":", "-").split(".")[0]}-{self.payloaddata.index(payload)}', 'w') as f:
