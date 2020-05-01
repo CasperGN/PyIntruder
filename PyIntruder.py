@@ -9,7 +9,7 @@ from socket import gaierror
 
 class PyIntruder():
 
-	def __init__(self, redir, save, out, url, payload):
+	def __init__(self, redir, save, out, url, payload, blocks):
 		pwd = os.path.dirname(os.path.realpath(__file__))
 
 		self.redir = redir
@@ -29,6 +29,9 @@ class PyIntruder():
 		with open(f'{pwd}/user-agents.txt', 'r') as agents:
 			for useragent in agents:
 				self.useragents.append(useragent.rstrip())
+
+		# This variable helps exiting after x amount of blocks caught in run
+		self.blocks = blocks 
 		
 		
 	def run(self):
@@ -37,6 +40,9 @@ class PyIntruder():
 		result = []
 
 		for payload in self.payloaddata:
+			if self.blocks == 0:
+				# We're out of luck, exit
+				break
 			user_agent = choice(self.useragents)
 			headers = {'User-Agent': user_agent}
 			payload = payload.strip('\n')
@@ -53,6 +59,7 @@ class PyIntruder():
 					r = requests.get(url, headers=headers, allow_redirects=self.redir)
 					if r.status_code == 403 and len(r.content) < 200 or r.status_code == 429 and len(r.content) < 200:
 						# At this point we just continue
+						self.blocks -= 1
 						continue
 			except (SSL.SysCallError, gaierror):
 				continue
@@ -76,6 +83,7 @@ if __name__ == '__main__':
 	parser.add_argument('-r', '--redir', help='Allow HTTP redirects', action="store_true")
 	parser.add_argument('-s', '--save', help='Save HTTP response content to files', action="store_true")
 	parser.add_argument('-o', '--out', type=str, help='Directory to save HTTP responses')
+	parser.add_argument('-b', '--blocks', type=int, help='Amount of blocks registered to exit (default: 5). This means that if 5 blocks are registered the fuzzer will exit')
 
 
 	if len(sys.argv) == 1:
@@ -87,8 +95,9 @@ if __name__ == '__main__':
 	redir = args.redir if args.output else None
 	save = args.save if args.callback else None
 	output = args.out if args.target else None
+	blocks = args.blocks if args.blocks else 5
 
-	intruder = PyIntruder(redir, save, output)
+	intruder = PyIntruder(redir, save, output, blocks)
 	#output = intruder.run()
 	#print("Status\tLength\tTime\t  Host")
 	#print("---------------------------------")
